@@ -3,6 +3,37 @@ docker buildx build --platform linux/amd64 -t proyecto-pikachu:latest . --load
 docker run --platform linux/amd64 -d -p 8000:80 --name proyecto-pikachu --env-file .env proyecto-pikachu:latest
 
 docker tag proyecto-pikachu:latest acrproyecto2dv.azurecr.io/proyecto-pikachu:latest
-docker tag proyecto-pikachu:latest acrproyecto2dv.azurecr.io/proyecto-pikachu:0.1.0
+docker tag proyecto-pikachu:latest acrproyecto2dv.azurecr.io/proyecto-pikachu:0.3.6
+
 docker push acrproyecto2dv.azurecr.io/proyecto-pikachu:latest
-docker push acrproyecto2dv.azurecr.io/proyecto-pikachu:0.1.0
+docker push acrproyecto2dv.azurecr.io/proyecto-pikachu:0.3.6
+
+docker buildx build --platform linux/amd64 -t pikachu-ui:latest . --load
+
+docker tag proyecto-pikachu:latest acrproyecto2dv.azurecr.io/pikachu-ui:latest
+docker tag proyecto-pikachu:latest acrproyecto2dv.azurecr.io/pikachu-ui:0.1.0
+
+docker push acrproyecto2dv.azurecr.io/pikachu-ui:latest
+docker push acrproyecto2dv.azurecr.io/pikachu-ui:0.1.0
+
+resource "azurerm_linux_web_app" "webapp_admin"{
+    name = "admin-${var.name_Project}-${var.enviroment}"
+    location = var.location
+    resource_group_name = azurerm_resource_group.rg.name
+    service_plan_id = azurerm_service_plan.sp.id
+
+  
+  site_config  {
+        always_on = false
+        application_stack {
+           docker_image_name = "acrproyecto2dv.azurecr.io/proyecto-pikachu:latest"
+
+        }
+    }
+   app_settings = {
+    WEBSITE_PORT = "8000",  # Puerto de la API
+
+   }
+
+  tags = var.tags
+}

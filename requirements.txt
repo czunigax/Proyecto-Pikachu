@@ -1,4 +1,6 @@
-fastapi
-uvicorn
+fastapi[all]
+uvicorn[standard]
 python-dotenv
 pyodbc
+azure-storage-queue==12.11.0
+azure.storage.blob==12.22.0
