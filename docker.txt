@@ -3,10 +3,10 @@ docker buildx build --platform linux/amd64 -t proyecto-pikachu:latest . --load
 docker run --platform linux/amd64 -d -p 8000:80 --name proyecto-pikachu --env-file .env proyecto-pikachu:latest
 
 docker tag proyecto-pikachu:latest acrproyecto2dv.azurecr.io/proyecto-pikachu:latest
-docker tag proyecto-pikachu:latest acrproyecto2dv.azurecr.io/proyecto-pikachu:0.3.6
+docker tag proyecto-pikachu:latest acrproyecto2dv.azurecr.io/proyecto-pikachu:0.3.8
 
 docker push acrproyecto2dv.azurecr.io/proyecto-pikachu:latest
-docker push acrproyecto2dv.azurecr.io/proyecto-pikachu:0.3.6
+docker push acrproyecto2dv.azurecr.io/proyecto-pikachu:0.3.8
 
 docker buildx build --platform linux/amd64 -t pikachu-ui:latest . --load
 

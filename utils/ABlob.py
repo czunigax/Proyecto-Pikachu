@@ -1,6 +1,7 @@
 import os
 from azure.storage.blob import BlobServiceClient, generate_blob_sas, BlobSasPermissions
 from datetime import datetime, timedelta
+from azure.core.exceptions import ResourceNotFoundError, HttpResponseError
 
 class ABlob:
     def __init__(self):
@@ -24,3 +25,32 @@ class ABlob:
             expiry=datetime.utcnow() + timedelta(hours=1)
         )
         return sas_token
+    
+    def delete_blob(self, id: int) -> dict:
+        blob_name = f"poke_report_{id}.csv"
+
+        try:
+            blob_client = self.blob_service_client.get_blob_client(container=CONTAINER_NAME, blob=blob_name)
+            blob_client.delete_blob()
+            return {
+                "success": True,
+                "message": f"Blob '{blob_name}' eliminado correctamente."
+            }
+
+        except ResourceNotFoundError:
+            return {
+                "success": False,
+                "message": f" El blob '{blob_name}' no existe."
+            }
+
+        except HttpResponseError   as e:
+            return {
+                "success": False,
+                "message": f"Error de Azure al eliminar el blob '{blob_name}': {str(e)}"
+            }
+
+        except Exception as e:
+            return {
+                "success": False,
+                "message": f" Error inesperado al eliminar el blob '{blob_name}': {str(e)}"
+            }

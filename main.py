@@ -3,7 +3,7 @@ import json
 
 from fastapi import FastAPI, Request
 from utils.database import execute_query_json 
-from controllers.PokRcontroller import insert_pokemon_r, update_pokemon_r, select_pokemon_request, get_all_request
+from controllers.PokRcontroller import insert_pokemon_r, update_pokemon_r, select_pokemon_request, get_all_request, delete_pokemon_request
 from models.PokeRequest import PokeRequest
 from fastapi.middleware.cors import CORSMiddleware  
 from fastapi.responses import JSONResponse
@@ -52,6 +52,11 @@ async def select_request(request_id: int):
 @app.get("/api/request")
 async def select_all_request():
     return await get_all_request()
+
+@app.delete("/api/report/{report_id}")
+async def delete_request(report_id: int):
+    return await delete_pokemon_request(report_id)
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port = 8000) 
